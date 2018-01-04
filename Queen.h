@@ -1,7 +1,7 @@
 #ifdef QUEEN_H
 #define QUEEN_H
 
-class Queen
+class Queen : public Piece
 {
 public:
 	Queen(int x, int y, char p);
