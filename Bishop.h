@@ -4,7 +4,7 @@
 class Bishop
 {
 public:
-	Bishop(int x, int y, bool b);
+	Bishop(int x, int y, char p);
 	
 	void move(int xTar, int yTar);
 	
@@ -17,7 +17,7 @@ public:
 private:
 	int xPos;
 	int yPos;
-	bool black;
+	char piece;
 }
 
 #endif
