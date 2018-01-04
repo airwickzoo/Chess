@@ -40,18 +40,3 @@ bool Rook::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
-
-int Rook::get_xPos()
-{
-	return xPos;
-}
-
-int Rook::get_yPos()
-{
-	return yPos;
-}
-
-char Rook::get_piece()
-{
-	return piece;
-}
