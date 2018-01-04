@@ -50,3 +50,8 @@ int Rook::get_yPos()
 {
 	return yPos;
 }
+
+char Rook::get_piece()
+{
+	return piece;
+}
