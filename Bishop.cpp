@@ -50,3 +50,8 @@ int Bishop::get_yPos()
 {
 	return yPos;
 }
+		
+char Bishop::get_piece()
+{
+	return piece;
+}
