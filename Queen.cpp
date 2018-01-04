@@ -40,18 +40,3 @@ bool Queen::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
-
-int Queen::get_xPos()
-{
-	return xPos;
-}
-
-int Queen::get_yPos()
-{
-	return yPos;
-}
-		
-char Queen::get_piece()
-{
-	return piece;
-}
