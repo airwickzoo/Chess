@@ -40,18 +40,3 @@ bool Bishop::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
-
-int Bishop::get_xPos()
-{
-	return xPos;
-}
-
-int Bishop::get_yPos()
-{
-	return yPos;
-}
-		
-char Bishop::get_piece()
-{
-	return piece;
-}
