@@ -51,7 +51,7 @@ int Queen::get_yPos()
 	return yPos;
 }
 		
-int Queen::get_piece()
+char Queen::get_piece()
 {
 	return piece;
 }
