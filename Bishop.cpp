@@ -1,10 +1,10 @@
 #include "Bishop.h"
 
-Bishop::Bishop(int x, int y, bool b)
+Bishop::Bishop(int x, int y, char p)
 {
 	xPos = x;
 	yPos = y;
-	black = b;
+	piece = p;
 }
 
 void Bishop::move(int xTar, int yTar)
