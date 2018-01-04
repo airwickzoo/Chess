@@ -14,6 +14,8 @@ public:
 	
 	int get_yPos();
 	
+	char get_piece();
+	
 private:
 	int xPos;
 	int yPos;
