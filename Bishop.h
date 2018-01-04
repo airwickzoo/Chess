@@ -1,7 +1,7 @@
 #ifdef BISHOP_H
 #define BISHOP_H
 
-class Bishop
+class Bishop : public Piece
 {
 public:
 	Bishop(int x, int y, char p);
