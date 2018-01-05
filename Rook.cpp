@@ -5,6 +5,7 @@ Rook::Rook(int x, int y, char p)
 	xPos = x;
 	yPos = y;
 	piece = p;
+	moved = False;
 }
 
 void Rook::move(int xTar, int yTar)
