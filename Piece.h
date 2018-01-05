@@ -10,6 +10,10 @@ public:
 	
 	char get_piece();
 	
+	void set_xPos(int xTar);
+	
+	void set_yPos(int yTar);
+	
 private:
 	int xPos;
 	int yPos;
