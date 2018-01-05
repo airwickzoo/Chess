@@ -21,3 +21,13 @@ char Piece::get_piece()
 {
 	return piece;
 }
+
+void Piece::set_xPos(int xTar)
+{
+	xPos = xTar;
+}
+
+void PIece::set_yPos(int yTar)
+{
+	yPos = yTar;
+}
