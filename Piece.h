@@ -14,6 +14,7 @@ private:
 	int xPos;
 	int yPos;
 	char piece;
+	bool moved;
 }
 
 #endif
