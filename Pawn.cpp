@@ -39,6 +39,10 @@ bool Pawn::checkValid(int xTar, int yTar)
 	{
 		return False;
 	}
+	else if(//put own king in check)
+	{
+		return False;
+	}
 	else
 	{
 		return True;
