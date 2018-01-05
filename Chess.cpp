@@ -25,7 +25,8 @@ void play(){
 	cout << "That the common notation is letter then number" << endl;
 	cout << "Such as b6 all other input would be invalid thank you." << endl;
 	
-	while(!checkmate()){
+	bool checkmate = false;
+	while(!checkmate){
 		string player;
 		if(turn%2 = 0)
 			player = "White";
@@ -34,31 +35,73 @@ void play(){
 		cout << player << "'s move:" << endl;
 		printing_board(x);
 		
-		//Select the piece to move
-		string start;
-		cout << player << ": select a piece" << endl;
-		cin >> start;
-		start = input_valid(start);
-		
-		//Select the destination
-		string end;
-		cout << player << ": choose a destination" << endl;
-		cin >> end;
-		end = input_valid(end);
-		
-		
+		move();
 		
 		turn++;
 	}
 }
 
+void move(){
+	bool input_valid = false;
+	//Select the piece to move
+	string start;
+	cout << player << ": select a piece" << endl;
+	cin >> start;
+		
+	//Make sure location contains valid piece
+	while(!input_valid){
+		//Change input if uppercase to lowercase
+		if(start[0] >= 65 && start[0] <= 72){
+			x[0] += 32;
+		}
+		if(start[0] >= 97 && start[0] <= 104 && start[1] >= 1 && start[1] <= 8 && ){
+			int xCur = start[1]-1;
+			int yCur = start[0]-97;
+			if(turn%2 = 0 && game_board[xCur][yCur]->piece >= 65 && game_board[xCur][yCur]->piece <= 90){
+				//White's turn and location on white piece
+				input_valid = true;
+			}else if(turn%2 = 1 && game_board[xCur][yCur]->piece >= 97 && game_board[xCur][yCur]->piece <= 122){
+				//Black's turn and location on black piece
+				input_valid = true;
+			}
+		}
+		//Reenter data if wrong
+		if(!input_valid){
+			cout << "Invalid location: Please reenter" << endl;
+			cin >> start;
+		}
+	}
+	
+	input_valid = false;
+	//Select the destination
+	string end;
+	cout << player << ": choose a destination" << endl;
+	cin >> end;
+	
+	//Make sure location does not contain your piece
+	
+	int xCur, yCur, xTar, yTar;
+	xCur = start[1]-1;
+	yCur = start[0]-97;
+	xTar = end[1]-1;
+	yTar = end[0]-97;
+	
+	move_valid = checkMoveValid(xCur, yCur, xTar, yTar);
+	if(!move_valid){
+		cout << "Move is invalid. Try again";
+		//Does this work? recursion to call itself again
+		move();
+	}
+	
+}
+
 string input_valid(string x){
 	while(true)
-		if(x[0] >= 65 && x[0] <= 90){
+		if(x[0] >= 65 && x[0] <= 72){
 			x[0] += 32;
 		}
 		
-		if(x[0] >= 97 && x[0] <= 122 && x[1] >= 1 && x[1] <= 8){
+		if(x[0] >= 97 && x[0] <= 104 && x[1] >= 1 && x[1] <= 8 && ){
 			return x;
 		}
 		
