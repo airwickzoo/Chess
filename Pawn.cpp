@@ -4,6 +4,7 @@ Pawn::Pawn(int x, int y, bool b){
 	xPos = x;
 	yPos = y;
 	black = b;
+	moved = False;
 }
 
 void Pawn::move(int xTar, int yTar)
@@ -18,7 +19,15 @@ void Pawn::move(int xTar, int yTar)
 
 bool Pawn::checkValid(int xTar, int yTar)
 {
-	if(yTar !== yPos + 1)
+	if(yTar == yPos + 2 && (moved || //piece on square))
+	{
+		return False;
+	}
+	else if(yTar - yPos > 2)
+	{
+		return False;
+	}
+	else if(yTar == yPos + 2 && xTar != xPos)
 	{
 		return False;
 	}
