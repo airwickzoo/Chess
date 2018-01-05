@@ -5,6 +5,7 @@ Bishop::Bishop(int x, int y, char p)
 	xPos = x;
 	yPos = y;
 	piece = p;
+	moved = False;
 }
 
 void Bishop::move(int xTar, int yTar)
