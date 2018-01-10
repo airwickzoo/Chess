@@ -1,12 +1,12 @@
-#ifndef BISHOP_H
-#define BISHOP_H
+#ifndef KING_H
+#define KING_H
 
 #include "Piece.h"
 
-class Bishop : public Piece
+class King : public Piece
 {
 public:
-	Bishop(int x, int y, char p);
+	King(int x, int y, char p);
 	
 	//void move(int xTar, int yTar);
 	

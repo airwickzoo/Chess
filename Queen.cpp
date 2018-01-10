@@ -1,12 +1,14 @@
 #include "Queen.h"
 
-Queen::Queen(int x, int y, char p)
+using namespace std;
+
+Queen::Queen(int x, int y, char p):Piece(x,y,p)
 {
 	xPos = x;
 	yPos = y;
 	piece = p;
 }
-
+/**
 void Queen::move(int xTar, int yTar)
 {
 	while(!checkValid(xTar, yTar))
@@ -40,3 +42,4 @@ bool Queen::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
+*/

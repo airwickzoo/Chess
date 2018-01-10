@@ -1,12 +1,14 @@
 #include "Pawn.h"
 
-Pawn::Pawn(int x, int y, bool b){
+using namespace std;
+
+Pawn::Pawn(int x, int y, char p):Piece(x,y,p)
+{
 	xPos = x;
 	yPos = y;
-	black = b;
-	moved = False;
+	piece = p;
 }
-
+/**
 void Pawn::move(int xTar, int yTar)
 {
 	while(!checkValid(xTar, yTar))
@@ -48,3 +50,4 @@ bool Pawn::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
+*/

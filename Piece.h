@@ -1,9 +1,12 @@
-#ifdef PIECE_H
+#ifndef PIECE_H
 #define PIECE_H
 
 class Piece
 {
 public:
+
+	Piece(int x, int y, char p);
+	
 	int get_xPos();
 	
 	int get_yPos();
@@ -14,11 +17,11 @@ public:
 	
 	void set_yPos(int yTar);
 	
-private:
+protected:
 	int xPos;
 	int yPos;
 	char piece;
-	bool moved;
-}
+	//bool moved;
+};
 
 #endif

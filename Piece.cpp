@@ -1,5 +1,7 @@
 #include "Piece.h"
 
+using namespace std;
+
 Piece::Piece(int x, int y, char p)
 {
 	xPos = x;
@@ -27,7 +29,7 @@ void Piece::set_xPos(int xTar)
 	xPos = xTar;
 }
 
-void PIece::set_yPos(int yTar)
+void Piece::set_yPos(int yTar)
 {
 	yPos = yTar;
 }

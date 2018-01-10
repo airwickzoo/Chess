@@ -1,13 +1,15 @@
 #include "Bishop.h"
 
-Bishop::Bishop(int x, int y, char p)
+using namespace std;
+
+Bishop::Bishop(int x, int y, char p):Piece(x,y,p)
 {
 	xPos = x;
 	yPos = y;
 	piece = p;
-	moved = False;
+	//moved = False;
 }
-
+/**
 void Bishop::move(int xTar, int yTar)
 {
 	while(!checkValid(xTar, yTar))
@@ -41,3 +43,4 @@ bool Bishop::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
+*/

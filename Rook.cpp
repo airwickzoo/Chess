@@ -1,13 +1,12 @@
 #include "Rook.h"
 
-Rook::Rook(int x, int y, char p)
-{
-	xPos = x;
-	yPos = y;
-	piece = p;
-	moved = False;
-}
+using namespace std;
 
+Rook::Rook(int x, int y, char p):Piece(x,y,p)
+{
+	//moved = False;
+}
+/**
 void Rook::move(int xTar, int yTar)
 {
 	while(!checkValid(xTar, yTar))
@@ -41,3 +40,4 @@ bool Rook::checkValid(int xTar, int yTar)
 		return True;
 	}
 }
+*/

@@ -7,16 +7,16 @@ class Pawn : public Piece
 {
 	public:
 	
-	Pawn(int x, int y, int b);
+	Pawn(int x, int y, char p);
 	
-	void move(int xTar, int yTar);
+	//void move(int xTar, int yTar);
 	
-	bool checkValid(int xTar, int yTar);
+	//bool checkValid(int xTar, int yTar);
 	
 	private:
 		int xPos;
 		int yPos;
-		bool black;
+		char piece;
 };
 
 #endif

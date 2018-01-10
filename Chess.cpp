@@ -1,12 +1,11 @@
-/*
-#include “Piece.h”
-#include “King.h”
-#include “Pawn.h”
-#include “Queen.h”
-#include “Bishop.h”
-#include “Knight.h”
-#include “Rook.h”
-*/
+#include "Piece.h"
+#include "King.h"
+#include "Pawn.h"
+#include "Queen.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Rook.h"
+
 #include <iostream>
 #include <iomanip>
 
@@ -15,9 +14,51 @@ using namespace std;
 const int CHESS_SIZE = 8;
 int turn = 0;
 
+const string black_piece = "prnbkq";
+const string white_piece = "PRNBKQ";
+
 //Game board variable
-piece* game_board[8][8] = NULL;
+Piece* x[8][8];
 string fake_board[8][8];
+
+void printing_board(){
+	cout << "  +------------------------+" << endl;
+	for(int row = 0; row < 8; row++){
+		cout << 8-row << " |";
+		for(int col = 0; col < 8; col++){
+			if(x[row][col] != NULL){
+				char piece = x[row][col]->get_piece();
+				if(turn%2 == 0){
+					//White's turn
+					if(piece >= 65 && piece <= 90){
+						//Check if piece is white's piece
+						cout << "<" << piece << ">";
+					}else if(piece >= 97 && piece <= 122){
+						//Black's piece
+						cout << "[" << piece << "]";
+					}
+				}else{
+					//Black's turn
+					if(piece >= 65 && piece <= 90){
+						//Check if piece is white's piece
+						cout << "[" << piece << "]";
+					}else if(piece >= 97 && piece <= 122){
+						//Black's piece
+						cout << "<" << piece << ">";
+					}
+				}
+			}else{
+				cout << fake_board[row][col];
+			}
+			
+		}
+		cout << "|" << endl;
+	}
+	
+	cout << "  +------------------------+" << endl;
+	cout << "    a  b  c  d  e  f  g  h" << endl;
+}
+
 
 void play(){
 	//DO EVERYTHING
@@ -28,19 +69,20 @@ void play(){
 	bool checkmate = false;
 	while(!checkmate){
 		string player;
-		if(turn%2 = 0)
+		if(turn%2 == 0)
 			player = "White";
 		else
 			player = "Black";
 		cout << player << "'s move:" << endl;
-		printing_board(x);
+		printing_board();
 		
-		move();
-		
+		//move();
+		checkmate = true;
 		turn++;
+		printing_board();
 	}
 }
-
+/**
 void move(){
 	bool input_valid = false;
 	//Select the piece to move
@@ -87,76 +129,17 @@ void move(){
 	yTar = end[0]-97;
 	
 	move_valid = checkMoveValid(xCur, yCur, xTar, yTar);
-	if(!move_valid){
-		cout << "Move is invalid. Try again";
-		//Does this work? recursion to call itself again
-		move();
-	}
 	
-}
-
-string input_valid(string x){
-	while(true)
-		if(x[0] >= 65 && x[0] <= 72){
-			x[0] += 32;
-		}
-		
-		if(x[0] >= 97 && x[0] <= 104 && x[1] >= 1 && x[1] <= 8 && ){
-			return x;
-		}
-		
-		cout << "Invalid location: Please reenter" << endl;
-		cin >> x;
-	}
-}
-
-
-void printing_board(){
-	cout << "  +------------------------+" << endl;
-	for(int row = 0; row < 8; row++){
-		cout << 8-row << " |";
-		for(int col = 0; col < 8; col++){
-			char piece = game_board[row][col]->piece;
-			if(turn%2 == 0){
-				//White's turn
-				if(piece >= 65 && piece <= 90){
-					//Check if piece is white's piece
-					cout << "<" << piece << ">";
-				}else if(piece >= 97 && piece <= 122){
-					//Black's piece
-					cout << "[" << piece << "]";
-				}else{
-					//No pieces on square
-					cout << fake_board[row][col];
-				}
-			}else{
-				//Black's turn
-				if(piece >= 65 && piece <= 90){
-					//Check if piece is white's piece
-					cout << "[" << piece << "]";
-				}else if(piece >= 97 && piece <= 122){
-					//Black's piece
-					cout << "<" << piece << ">";
-				}else{
-					//No pieces on square
-					cout << fake_board[row][col];
-				}
-			}
-			
-		}
-		cout << "|" << endl;
-	}
 	
-	cout << "  +------------------------+" << endl;
-	cout << "    a  b  c  d  e  f  g  h" << endl;
-}
+}*/
+
 
 /**
 	Creates the starting chess board
 	@param 8x8 array for entire board
 	@return void (NULL)
 */
-void starting_board(piece *x[][8])
+void starting_board()
 {
 	//Black is lower case, White is upper
 	x[0][0] = new Rook(0,0,'r'); 
@@ -191,10 +174,16 @@ void starting_board(piece *x[][8])
 	x[7][5] = new Bishop(7,5,'B');
 	x[7][6] = new Knight(7,6,'K');
 	x[7][7] = new Rook(7,7,'R');
-	
-	for(int i = 2; i < 6; i++){
-		for(int j = 0; j < CHESS_SIZE; j++){
-			x[i][j] = NULL;
+
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(i%2 == 0 && j%2 == 0){
+				fake_board[i][j] = ":::";
+			}else if(i%2 == 1 && j%2 == 1){
+				fake_board[i][j] = ":::";
+			}else{
+				fake_board[i][j] = "   ";
+			}
 		}
 	}
 }
@@ -211,6 +200,7 @@ bool continue_playing(){
 	cin >> input;
 	
 	if(input == "Y" || input == "y" || input == "yes"){
+		turn = 0;
 		return true;
 	}else{
 		return false;
@@ -219,32 +209,30 @@ bool continue_playing(){
 
 int main()
 {
-	
+	bool cont = false;
 	do{
-		bool cont = false;
-		
 		
 		//Fake board for printing purposes
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
 				if(i%2 == 0 && j%2 == 0){
-					y[i][j] = ":::";
+					fake_board[i][j] = ":::";
 				}else if(i%2 == 1 && j%2 == 1){
-					y[i][j] = ":::";
+					fake_board[i][j] = ":::";
 				}else{
-					y[i][j] = "   ";
+					fake_board[i][j] = "   ";
 				}
 			}
 		}
 		
 		//Create the starting game board
-		starting_board(game_board);
+		starting_board();
 		
 		//Playing Chess game
 		play();
 		
 		//Remove memory of the game board
-		delete game_board;
+		//delete x;
 		
 		//Ask user if they want to play again
 		cont = continue_playing();
