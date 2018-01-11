@@ -16,59 +16,32 @@ int turn = 0;
 
 const string black_piece = "prnbkq";
 const string white_piece = "PRNBKQ";
+string player;
 
 //Game board variable
 Piece* x[8][8];
 string fake_board[8][8];
 
-void printing_board(){
-	cout << "  +------------------------+" << endl;
-	for(int row = 0; row < 8; row++){
-		cout << 8-row << " |";
-		for(int col = 0; col < 8; col++){
-			if(x[row][col] != NULL){
-				char piece = x[row][col]->get_piece();
-				if(turn%2 == 0){
-					//White's turn
-					if(piece >= 65 && piece <= 90){
-						//Check if piece is white's piece
-						cout << "<" << piece << ">";
-					}else if(piece >= 97 && piece <= 122){
-						//Black's piece
-						cout << "[" << piece << "]";
-					}
-				}else{
-					//Black's turn
-					if(piece >= 65 && piece <= 90){
-						//Check if piece is white's piece
-						cout << "[" << piece << "]";
-					}else if(piece >= 97 && piece <= 122){
-						//Black's piece
-						cout << "<" << piece << ">";
-					}
-				}
-			}else{
-				cout << fake_board[row][col];
-			}
-			
-		}
-		cout << "|" << endl;
-	}
-	
-	cout << "  +------------------------+" << endl;
-	cout << "    a  b  c  d  e  f  g  h" << endl;
-}
-
+//Game methods
+void play();
+void move(string player);
+void location(int &xCur, int &yCur, int &xTar, int &yTar);
+void valid_location(int &x, int &y);
+void starting_board();
+void printing_board();
+bool continue_playing();
 
 void play(){
 	//DO EVERYTHING
+	cout << endl;
 	cout << "Welcome! Before you start your game please note" << endl;
 	cout << "That the common notation is letter then number" << endl;
 	cout << "Such as b6 all other input would be invalid thank you." << endl;
+	cout << endl << "White is indicated by <> and uppercase letters while " << endl;
+	cout << "Black is indicated by [] and lowercase letters" << endl;
 	
 	bool checkmate = false;
 	while(!checkmate){
-		string player;
 		if(turn%2 == 0)
 			player = "White";
 		else
@@ -76,62 +49,79 @@ void play(){
 		cout << player << "'s move:" << endl;
 		printing_board();
 		
-		//move();
-		checkmate = true;
+		move(player);
 		turn++;
-		printing_board();
+		if(turn == 5){
+			checkmate = true;
+		}
 	}
 }
-/**
-void move(){
-	bool input_valid = false;
+void valid_location(int &x, int &y){
+	string temp;
+	
+	//Ensures location on array
+	while(x < 0 || x > 7 || y < 0 || y > 7){
+		cout << "Invalid location. Please reenter another." << endl;
+		cin >> temp;
+		y = temp[0]-97;
+		x = (temp[1]-56)*-1;
+	}
+}
+
+void location(int &xCur, int &yCur, int &xTar, int &yTar){
 	//Select the piece to move
 	string start;
 	cout << player << ": select a piece" << endl;
 	cin >> start;
-		
-	//Make sure location contains valid piece
-	while(!input_valid){
-		//Change input if uppercase to lowercase
-		if(start[0] >= 65 && start[0] <= 72){
-			x[0] += 32;
-		}
-		if(start[0] >= 97 && start[0] <= 104 && start[1] >= 1 && start[1] <= 8 && ){
-			int xCur = start[1]-1;
-			int yCur = start[0]-97;
-			if(turn%2 = 0 && game_board[xCur][yCur]->piece >= 65 && game_board[xCur][yCur]->piece <= 90){
-				//White's turn and location on white piece
-				input_valid = true;
-			}else if(turn%2 = 1 && game_board[xCur][yCur]->piece >= 97 && game_board[xCur][yCur]->piece <= 122){
-				//Black's turn and location on black piece
-				input_valid = true;
-			}
-		}
-		//Reenter data if wrong
-		if(!input_valid){
-			cout << "Invalid location: Please reenter" << endl;
+	yCur = start[0]-97;
+	xCur = (start[1]-56)*-1;
+	
+	valid_location(xCur, yCur);
+	//Check if it is turn's player piece
+	if(turn%2 == 0){
+		//White players
+		while(x[xCur][yCur] == NULL || x[xCur][yCur]->get_piece()  < 65 || x[xCur][yCur]->get_piece() > 90){
+			cout << "Not your piece. Please enter another location" << endl;
 			cin >> start;
+			yCur = start[0]-97;
+			xCur = (start[1]-56)*-1;
+			valid_location(xCur, yCur);
+		}
+	}else{
+		while(x[xCur][yCur] == NULL || x[xCur][yCur]->get_piece()  < 97 || x[xCur][yCur]->get_piece() > 122){
+			cout << "Not your piece. Please enter another location" << endl;
+			cin >> start;
+			yCur = start[0]-97;
+			xCur = (start[1]-56)*-1;
+			valid_location(xCur, yCur);
 		}
 	}
 	
-	input_valid = false;
 	//Select the destination
 	string end;
 	cout << player << ": choose a destination" << endl;
 	cin >> end;
 	
-	//Make sure location does not contain your piece
-	
-	int xCur, yCur, xTar, yTar;
-	xCur = start[1]-1;
-	yCur = start[0]-97;
-	xTar = end[1]-1;
+	//Changing location to array notation (x=row, y=col)
 	yTar = end[0]-97;
+	xTar = (end[1]-56)*-1;
 	
-	move_valid = checkMoveValid(xCur, yCur, xTar, yTar);
+	valid_location(xTar, yTar);
 	
+}
+
+void move(string player){
+	int xCur = -1, yCur = -1, xTar = -1, yTar = -1;
 	
-}*/
+	location(xCur, yCur, xTar, yTar);
+	
+	//moved
+	x[xTar][yTar] = x[xCur][yCur];
+	x[xCur][yCur] = NULL;
+	
+	//move_valid = checkMoveValid(xCur, yCur, xTar, yTar);
+	
+}
 
 
 /**
@@ -188,6 +178,32 @@ void starting_board()
 	}
 }
 
+void printing_board(){
+	cout << "  +------------------------+" << endl;
+	for(int row = 0; row < 8; row++){
+		cout << 8-row << " |";
+		for(int col = 0; col < 8; col++){
+			if(x[row][col] != NULL){
+				char piece = x[row][col]->get_piece();
+				if(piece >= 65 && piece <= 90){
+					//Check if piece is white's piece
+					cout << "<" << piece << ">";
+				}else if(piece >= 97 && piece <= 122){
+					//Black's piece
+					cout << "[" << piece << "]";
+				}
+			}else{
+				cout << fake_board[row][col];
+			}
+			
+		}
+		cout << "|" << endl;
+	}
+	
+	cout << "  +------------------------+" << endl;
+	cout << "    a  b  c  d  e  f  g  h" << endl;
+}
+
 /**
 	Asks player if wants to play another game_board
 	@param 
@@ -232,7 +248,12 @@ int main()
 		play();
 		
 		//Remove memory of the game board
-		//delete x;
+		
+		for(int i = 0; i < 8; i++){
+			for(int j = 0; j < 8; j++){
+				x[i][j] = NULL;
+			}
+		}
 		
 		//Ask user if they want to play again
 		cont = continue_playing();
