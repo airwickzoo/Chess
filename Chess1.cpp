@@ -242,7 +242,7 @@ bool vertical(Piece* start, Piece* end){
     }
     else {
         for(int i = start_y+1; i < end_y; i++){
-            if(x[i][start->get_yPos()] != NULL){
+            if(x[start->get_xPos()][i] != NULL){
                 clear = false;
             }
         }
