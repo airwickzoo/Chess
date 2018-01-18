@@ -1,4 +1,5 @@
 #include "Pawn.h"
+#include <iostream>
 
 using namespace std;
 
@@ -18,36 +19,52 @@ void Pawn::move(int xTar, int yTar)
 	xPos = xTar;
 	yPos = yTar;
 }
-
-bool Pawn::checkValid(int xTar, int yTar)
+*/
+bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
-	if(yTar == yPos + 2 && (moved || //piece on square))
+
+	int two = 2;
+	int one = 1;
+
+	if(isupper(piece))
 	{
-		return False;
+		two = -2;
+		one = -1;
 	}
-	else if(yTar - yPos > 2)
+	
+	if(xTar - xPos > 2 || xPos - xTar > 2)
 	{
-		return False;
+		return false;
 	}
-	else if(yTar == yPos + 2 && xTar != xPos)
+	if(yPos == yTar)
 	{
-		return False;
+		if(board[xTar][yTar] != NULL)
+		{
+			return false;
+		}
+		if(xTar == xPos + two && moved)
+		{
+			return false;
+		}
 	}
-	else if(xTar == xPos && //piece on square)
+	else if(yTar == yPos + 1 || yTar ==
+	 yPos - 1)
 	{
-		return False;
-	}
-	else if((xTar == xPos + 1 || xTar == xPos - 1) && //opposing piece not on square)
-	{
-		return False;
-	}
-	else if(//put own king in check)
-	{
-		return False;
+		if(xTar != xPos + one)
+		{
+			return false;
+		}
+		if(!board[xTar][yTar])
+		{
+			return false;
+		}
 	}
 	else
 	{
-		return True;
+		return false;
 	}
+
+	xPos = xTar;
+	yPos = yTar;
+	return true;
 }
-*/

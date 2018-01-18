@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cctype>
+#include <cmath>
 
 using namespace std;
 
@@ -26,9 +28,15 @@ string fake_board[8][8];
 void play();
 void move(string player);
 void location(int &xCur, int &yCur, int &xTar, int &yTar);
-void valid_location(int &x, int &y);
+void valid_location(int &xCur, int &yCur);
+void valid_dest(int xCur, int yCur, int &xTar, int &yTar);
 void starting_board();
+bool horizontal();
+bool vertical();
+bool diagonal();
+bool kingcheck();
 void printing_board();
+void checkValid();
 bool continue_playing();
 
 void play(){
@@ -36,7 +44,7 @@ void play(){
 	cout << endl;
 	cout << "Welcome! Before you start your game please note" << endl;
 	cout << "That the common notation is letter then number" << endl;
-	cout << "Such as b6 all other input would be invalid thank you." << endl;
+	cout << "Such as b6; all other input is invalid, thank you." << endl;
 	cout << endl << "White is indicated by <> and uppercase letters while " << endl;
 	cout << "Black is indicated by [] and lowercase letters" << endl;
 	
@@ -51,23 +59,46 @@ void play(){
 		
 		move(player);
 		turn++;
-		if(turn == 5){
+		if(turn == 10){
 			checkmate = true;
 		}
-	}
-}
-void valid_location(int &x, int &y){
-	string temp;
-	
-	//Ensures location on array
-	while(x < 0 || x > 7 || y < 0 || y > 7){
-		cout << "Invalid location. Please reenter another." << endl;
-		cin >> temp;
-		y = temp[0]-97;
-		x = (temp[1]-56)*-1;
+		cout << "kingcheck: " << kingcheck() << endl;
 	}
 }
 
+// Loops until user inputs a valid location
+void valid_location(int &xLoc, int &yLoc){
+	string temp;
+	//Ensures location on array
+	while(xLoc < 0 || xLoc > 7 || yLoc < 0 || yLoc > 7){
+		cout << "Invalid location. Please reenter another." << endl;
+		cin >> temp;
+		yLoc = temp[0]-97;
+		xLoc = (temp[1]-56)*-1;
+	}
+	
+}
+
+void valid_dest(int xCur, int yCur, int &xTar, int &yTar)
+{
+	string temp;
+	Piece* piece = x[xCur][yCur];
+	while((xTar == xCur && yTar == yCur)
+			/*|| (islower(x[xTar][yTar]->get_piece()) && islower(piece->get_piece())) 
+			|| (isupper(x[xTar][yTar]->get_piece()) && isupper(piece->get_piece()))*/
+			|| !piece->checkValid(xTar, yTar, x)
+		)
+			
+
+	{
+		cout << "Invalid destination. Please reenter another." << endl;
+		cin >> temp;
+		yTar = temp[0]-97;
+		xTar = (temp[1]-56)*-1;
+	}
+}
+
+// Loops until user selects a valid starting location and ending location
 void location(int &xCur, int &yCur, int &xTar, int &yTar){
 	//Select the piece to move
 	string start;
@@ -107,7 +138,7 @@ void location(int &xCur, int &yCur, int &xTar, int &yTar){
 	xTar = (end[1]-56)*-1;
 	
 	valid_location(xTar, yTar);
-	
+	valid_dest(xCur,yCur,xTar,yTar);
 }
 
 void move(string player){
@@ -115,14 +146,210 @@ void move(string player){
 	
 	location(xCur, yCur, xTar, yTar);
 	
-	//moved
 	x[xTar][yTar] = x[xCur][yCur];
 	x[xCur][yCur] = NULL;
 	
-	//move_valid = checkMoveValid(xCur, yCur, xTar, yTar);
+	x[xTar][yTar]->set_moved();
+
 	
 }
 
+//segmentation fault somewhere in horizontal, vertical, diagonal
+
+bool horizontal(Piece* start, Piece* end){
+    bool clear = true;
+    int start_x = start->get_xPos();
+    int end_x = end->get_xPos();
+    if(start->get_xPos() > end->get_xPos()){
+        start_x = end->get_xPos();
+        end_x = start->get_xPos();
+    }
+    if(start->get_yPos() != end->get_yPos()){
+        clear = false;
+    }
+    else {
+        for(int i = start_x+1; i < end_x; i++){
+            if(x[i][start->get_yPos()] != NULL){
+                clear = false;
+            }
+        }
+    }
+    return clear;
+}
+
+bool vertical(Piece* start, Piece* end){
+    bool clear = true;
+    int start_y = start->get_yPos();
+    int end_y = end->get_yPos();
+    if(start->get_yPos() > end->get_yPos()){
+        start_y = end->get_yPos();
+        end_y = start->get_yPos();
+    }
+    if(start->get_xPos() != end->get_xPos()){
+        clear = false;
+    }
+    else {
+        for(int i = start_y+1; i < end_y; i++){
+            if(x[i][start->get_yPos()] != NULL){
+                clear = false;
+            }
+        }
+    }
+    return clear;
+    
+}
+
+bool diagonal(Piece* start, Piece* end){
+    bool clear = true;
+    int x_d = 1;
+    int y_d = 1;
+    if(start->get_xPos()-end->get_xPos() < 0){
+        x_d = -1;
+    }
+    if(start->get_yPos()-end->get_yPos() < 0){
+        y_d = -1;
+    }
+    if(abs(start->get_xPos()-end->get_xPos()) != abs(start->get_yPos()-end->get_yPos())){
+        clear = false;
+    }
+    else{
+        for(int i = 1; i < start->get_xPos()-end->get_xPos(); i ++){
+            if(x[start->get_xPos()+(i*x_d)][start->get_yPos()+(i*y_d)] != NULL){
+                clear = false;
+            }
+        }
+    }
+    return clear;
+}
+
+bool kingcheck(){
+    char king = 'k';
+    char rook = 'R';
+    char knight = 'N';
+    char bishop = 'B';
+    char queen = 'Q';
+    char pawn = 'P';
+    
+    if (turn % 2 == 1){
+        king = 'K';
+        rook = 'r';
+        knight = 'n';
+        bishop = 'b';
+        queen = 'q';
+        pawn = 'p';
+    }
+
+
+    char a[8][8];
+    int kingrow = 0;
+    int kingcol = 0;
+    for (int j = 0; j < 8; j ++){
+        for (int k = 0; k < 8; k ++){
+            if(x[j][k] != NULL){
+                a[j][k] = x[j][k]->get_piece();
+                if(a[j][k] == king){
+                    kingrow = j;
+                    kingcol = k;
+                }
+            }
+        }
+    }
+    cout << "not segmented yet!" << endl;
+    // rook
+    for (int row = 0; row < 8; row ++){
+        for (int col = 0; col < 8; col ++){
+            if (a[row][col] == rook){
+                if (horizontal(x[row][col], x[kingrow][kingcol]) || vertical(x[row][col], x[kingrow][kingcol])){
+                    return true;
+                }
+            }
+        }
+    }
+    
+    // knight
+    if (kingrow < 7 && kingcol < 7){
+        if (a[kingrow+1][kingcol+2] == knight){
+            return true;
+        }
+    }
+
+    if (kingrow < 7 && kingcol >0){
+        if (a[kingrow+1][kingcol-1] == knight){
+            return true;
+        }
+    }
+    
+    if (kingrow > 0 && kingcol < 6){
+        if (a[kingrow-1][kingcol+2] == knight){
+            return true;
+        }
+    }
+    
+    if (kingrow > 0 && kingcol > 1) {
+        if (a[kingrow-1][kingcol-2] == knight){
+            return true;
+        }
+    }
+    
+    if (kingrow < 6 && kingcol < 7){
+        if (a[kingrow+2][kingcol+1] == knight){
+            return true;
+        }
+    }
+
+    if (kingrow < 6 && kingcol > 0){
+        if (a[kingrow+2][kingcol-1] == knight){
+            return true;
+        }
+    }
+
+    if (kingrow > 1 && kingcol <7){
+        if (a[kingrow-2][kingcol+1] == knight){
+            return true;
+        }
+    }
+
+    if (kingrow > 1 && kingcol > 0){
+        if (a[kingrow-2][kingcol-1] == knight){
+            return true;
+        }
+    }
+
+    // bishop
+    for (int row = 0; row < 8; row ++){
+        for (int col = 0; col < 8; col ++){
+            if (a[row][col] == bishop){
+                if (diagonal(x[row][col], x[kingrow][kingcol])){
+                    return true;
+                }
+            }
+        }
+    }
+    
+    // pawn
+    for (int row = 0; row < 8; row ++){
+        for (int col = 0; col < 8; col ++){
+            if (a[row][col] == pawn && abs(row-kingrow) == 1){
+                if (diagonal(x[row][col], x[kingrow][kingcol])){
+                    return true;
+                }
+            }
+        }
+    }
+    
+    // queen
+    for (int row = 0; row < 8; row ++){
+        for (int col = 0; col < 8; col ++){
+            if (a[row][col] == queen){
+                if (diagonal(x[row][col], x[kingrow][kingcol]) || horizontal(x[row][col], x[kingrow][kingcol]) || vertical(x[row][col], x[kingrow][kingcol])){
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
+}
 
 /**
 	Creates the starting chess board
@@ -162,7 +389,7 @@ void starting_board()
 	x[7][3] = new Queen(7,3,'Q');
 	x[7][4] = new King(7,4,'K');
 	x[7][5] = new Bishop(7,5,'B');
-	x[7][6] = new Knight(7,6,'K');
+	x[7][6] = new Knight(7,6,'N');
 	x[7][7] = new Rook(7,7,'R');
 
 	for(int i = 0; i < 8; i++){

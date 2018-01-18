@@ -10,7 +10,7 @@ public:
 	
 	//void move(int xTar, int yTar);
 	
-	//bool checkValid(int xTar, int yTar);
+	//virtual bool checkValid(int xTar, int yTar, Piece* board[8][8]);
 };
 
 #endif

@@ -1,4 +1,6 @@
 #include "Piece.h"
+#include <cctype>
+#include <iostream>
 
 using namespace std;
 
@@ -7,6 +9,7 @@ Piece::Piece(int x, int y, char p)
 	xPos = x;
 	yPos = y;
 	piece = p;
+	moved = false;
 }
 
 int Piece::get_xPos()
@@ -33,3 +36,14 @@ void Piece::set_yPos(int yTar)
 {
 	yPos = yTar;
 }
+
+void Piece::set_moved()
+{
+	moved = true;
+}
+
+bool Piece::checkValid(int xTar, int yTar, Piece* board[8][8])
+{
+	return true;
+}
+
