@@ -19,6 +19,8 @@ public:
 	
 	void set_yPos(int yTar);
 
+	void move(int xTar, int yTar);
+
 	void set_moved();
 	
 	virtual bool checkValid(int xTar, int yTar, Piece* board[8][8]);

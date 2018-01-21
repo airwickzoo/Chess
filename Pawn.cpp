@@ -47,8 +47,7 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 			return false;
 		}
 	}
-	else if(yTar == yPos + 1 || yTar ==
-	 yPos - 1)
+	else if(yTar == yPos + 1 || yTar == yPos - 1)
 	{
 		if(xTar != xPos + one)
 		{

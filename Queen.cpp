@@ -1,4 +1,5 @@
 #include "Queen.h"
+#include <iostream>
 
 using namespace std;
 
@@ -18,28 +19,113 @@ void Queen::move(int xTar, int yTar)
 	xPos = xTar;
 	yPos = yTar;
 }
+*/
 
-bool Queen::checkValid(int xTar, int yTar)
+bool Queen::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
-	if((xPos != xTar && yPos != yTar) || (xPos-xTar)/(yPos-yTar) != -1 || (xPos-xTar)/(yPos-yTar) != 1)
+	if(xPos == xTar)
 	{
-		return False;
+		if(yTar > yPos)
+		{
+			for(int i = yPos + 1; i < yTar; i++)
+			{
+				if(board[xPos][i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = yTar + 1; i < yPos; i++)
+			{
+				if(board[xPos][i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
 	}
-	else if(//piece between Queen and square)
+	else if(yPos == yTar)
 	{
-		return False;
+		if(xTar > xPos)
+		{
+			for(int i = xPos + 1; i < xTar; i++)
+			{
+				if(board[i][yPos] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = xTar + 1; i < xPos; i++)
+			{
+				if(board[i][yPos] != NULL)
+				{
+					return false;
+				}
+			}
+		}
 	}
-	else if(//put own king in check)
+	else if(xTar-xPos == 0 || yTar-yPos == 0)
 	{
-		return False;
+		return false;
 	}
-	else if(//own piece on square)
+	else if(((double)(xTar-xPos))/(yTar-yPos) == 1.0)
 	{
-		return False;
+		if(xTar > xPos)
+		{
+			for(int i = 1; i < xTar-xPos; i++)
+			{
+				if(board[xPos+i][yPos+i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = -1; i > xTar-xPos; i--)
+			{
+				if(board[xPos+i][yPos+i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+	}
+	else if(((double)(xTar-xPos))/(yTar-yPos) == -1.0)
+	{
+		if(xTar > xPos)
+		{
+			for(int i = 1; i < xTar-xPos; i++)
+			{
+				if(board[xPos+i][yPos-i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = -1; i > xTar-xPos; i--)
+			{
+				if(board[xPos+i][yPos-i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
 	}
 	else
 	{
-		return True;
+		return false;
 	}
+
+	
+	xPos = xTar;
+	yPos = yTar;
+	return true;
 }
-*/

@@ -1,4 +1,5 @@
 #include "Bishop.h"
+#include <iostream>
 
 using namespace std;
 
@@ -19,28 +20,62 @@ void Bishop::move(int xTar, int yTar)
 	xPos = xTar;
 	yPos = yTar;
 }
-
-bool Bishop::checkValid(int xTar, int yTar)
+*/
+bool Bishop::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
-	if((xPos-xTar)/(yPos-yTar) != -1 || (xPos-xTar)/(yPos-yTar) != 1))
+	if(xTar-xPos == 0 || yTar-yPos == 0)
+		{
+			return false;
+		}
+	else if(((double)(xTar-xPos))/(yTar-yPos) == 1.0)
 	{
-		return False;
+		if(xTar > xPos)
+		{
+			for(int i = 1; i < xTar-xPos; i++)
+			{
+				if(board[xPos+i][yPos+i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = -1; i > xTar-xPos; i--)
+			{
+				if(board[xPos+i][yPos+i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
 	}
-	else if(//piece between Bishop and square)
+	else if(((double)(xTar-xPos))/(yTar-yPos) == -1.0)
 	{
-		return False;
-	}
-	else if(//put own king in check)
-	{
-		return False;
-	}
-	else if(//own piece on square)
-	{
-		return False;
+		if(xTar > xPos)
+		{
+			for(int i = 1; i < xTar-xPos; i++)
+			{
+				if(board[xPos+i][yPos-i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for(int i = -1; i > xTar-xPos; i--)
+			{
+				if(board[xPos+i][yPos-i] != NULL)
+				{
+					return false;
+				}
+			}
+		}
 	}
 	else
 	{
-		return True;
+		return false;
 	}
+	return true;
 }
-*/

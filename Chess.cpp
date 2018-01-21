@@ -29,7 +29,7 @@ void play();
 void move(string player);
 void location(int &xCur, int &yCur, int &xTar, int &yTar);
 void valid_location(int &xCur, int &yCur);
-void valid_dest(int xCur, int yCur, int &xTar, int &yTar);
+bool valid_dest(int xCur, int yCur, int &xTar, int &yTar);
 void starting_board();
 bool horizontal();
 bool vertical();
@@ -62,7 +62,7 @@ void play(){
 		if(turn == 10){
 			checkmate = true;
 		}
-		cout << "kingcheck: " << kingcheck() << endl;
+		// cout << "kingcheck: " << kingcheck() << endl;
 	}
 }
 
@@ -79,22 +79,21 @@ void valid_location(int &xLoc, int &yLoc){
 	
 }
 
-void valid_dest(int xCur, int yCur, int &xTar, int &yTar)
+bool valid_dest(int xCur, int yCur, int &xTar, int &yTar)
 {
 	string temp;
 	Piece* piece = x[xCur][yCur];
-	while((xTar == xCur && yTar == yCur)
-			/*|| (islower(x[xTar][yTar]->get_piece()) && islower(piece->get_piece())) 
-			|| (isupper(x[xTar][yTar]->get_piece()) && isupper(piece->get_piece()))*/
-			|| !piece->checkValid(xTar, yTar, x)
-		)
-			
 
+	if((xTar == xCur && yTar == yCur) || !piece->checkValid(xTar, yTar, x)
+		|| x[xTar][yTar] != NULL && 
+		((islower(x[xTar][yTar]->get_piece()) && islower(piece->get_piece())) 
+		|| (isupper(x[xTar][yTar]->get_piece()) && isupper(piece->get_piece()))))
 	{
-		cout << "Invalid destination. Please reenter another." << endl;
-		cin >> temp;
-		yTar = temp[0]-97;
-		xTar = (temp[1]-56)*-1;
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
 
@@ -138,7 +137,6 @@ void location(int &xCur, int &yCur, int &xTar, int &yTar){
 	xTar = (end[1]-56)*-1;
 	
 	valid_location(xTar, yTar);
-	valid_dest(xCur,yCur,xTar,yTar);
 }
 
 void move(string player){
@@ -146,11 +144,16 @@ void move(string player){
 	
 	location(xCur, yCur, xTar, yTar);
 	
+	if(!valid_dest(xCur, yCur, xTar, yTar)){
+		cout << "Not A Valid Move" << endl;
+		move(player);
+		return;
+	}
+
 	x[xTar][yTar] = x[xCur][yCur];
 	x[xCur][yCur] = NULL;
 	
 	x[xTar][yTar]->set_moved();
-
 	
 }
 
