@@ -21,6 +21,7 @@ string player;
 
 //Game board variable
 Piece* x[8][8];
+char y[8][8];
 string fake_board[8][8];
 
 void play();
@@ -32,11 +33,31 @@ void starting_board();
 bool horizontal();
 bool vertical();
 bool diagonal();
-bool kingcheck();
+bool kingcheck(int player);
+void findking(int player, int& kingrow, int& kingcol);
 void printing_board();
 void checkValid();
 bool continue_playing();
 bool checkMoveValid(int &xCur, int &yCur, int &xTar, int &yTar);
+void copyboard();
+void move_copy();
+
+void copyboard(){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(x[i][j] != NULL){
+				y[i][j] = x[i][j]->get_piece();
+			}else{
+				y[i][j] = ' ';
+			}
+		}
+	}
+}
+void move_copy(int xCur, int yCur, int xTar, int yTar){
+	copyboard();
+	y[xTar][yTar] = y[xCur][yCur];
+	y[xCur][yCur] = ' ';
+}
 
 void printing_board(){
 	cout << "  +------------------------+" << endl;
@@ -45,24 +66,12 @@ void printing_board(){
 		for(int col = 0; col < 8; col++){
 			if(x[row][col] != NULL){
 				char piece = x[row][col]->get_piece();
-				if(turn%2 == 0){
-					//White's turn
-					if(piece >= 65 && piece <= 90){
-						//Check if piece is white's piece
-						cout << "<" << piece << ">";
-					}else if(piece >= 97 && piece <= 122){
-						//Black's piece
-						cout << "[" << piece << "]";
-					}
-				}else{
-					//Black's turn
-					if(piece >= 65 && piece <= 90){
-						//Check if piece is white's piece
-						cout << "[" << piece << "]";
-					}else if(piece >= 97 && piece <= 122){
-						//Black's piece
-						cout << "<" << piece << ">";
-					}
+				if(piece >= 65 && piece <= 90){
+					//Check if piece is white's piece
+					cout << "<" << piece << ">";
+				}else if(piece >= 97 && piece <= 122){
+					//Black's piece
+					cout << "[" << piece << "]";
 				}
 			}else{
 				cout << fake_board[row][col];
@@ -93,7 +102,8 @@ void play(){
 		printing_board();
 		
 		move(player);
-		if(kingcheck()){
+		
+		if(kingcheck(turn)){
 			cout << player << " checked the king" << endl;
 		}
 		turn++;
@@ -163,8 +173,15 @@ void move(string player){
 	bool move_valid = false;
 	
 	location(xCur, yCur, xTar, yTar);
+	
 	if(!checkMoveValid(xCur, yCur, xTar, yTar)){
 		cout << "Not A Valid Move" << endl;
+		move(player);
+		return;
+	}
+	move_copy(xCur, yCur, xTar, yTar);
+	if(kingcheck(turn+1)){
+		cout << "Your King is in Check You Bonobo" << endl;
 		move(player);
 		return;
 	}
@@ -251,20 +268,22 @@ bool continue_playing(){
 	}
 }
 
-bool horizontal(Piece* start, Piece* end){
+bool horizontal(int row, int col, int kingrow, int kingcol){
     bool clear = true;
-    int start_x = start->get_xPos();
-    int end_x = end->get_xPos();
-    if(start->get_xPos() > end->get_xPos()){
-        start_x = end->get_xPos();
-        end_x = start->get_xPos();
+	//cout << "Passed" << endl;
+    int start_x = row;
+    int end_x = kingrow;
+	//cout << "xpos " << start_x << " " << end_x << endl;
+    if(start_x > end_x){
+        start_x = kingrow;
+        end_x = row;
     }
-    if(start->get_yPos() != end->get_yPos()){
-        clear = false;
+    if(col != kingcol){
+        return false;
     }
     else {
         for(int i = start_x+1; i < end_x; i++){
-            if(x[i][start->get_yPos()] != NULL){
+            if(y[i][col] != ' '){
                 clear = false;
             }
         }
@@ -272,20 +291,22 @@ bool horizontal(Piece* start, Piece* end){
     return clear;
 }
 
-bool vertical(Piece* start, Piece* end){
+bool vertical(int row, int col, int kingrow, int kingcol){
     bool clear = true;
-    int start_y = start->get_yPos();
-    int end_y = end->get_yPos();
-    if(start->get_yPos() > end->get_yPos()){
-        start_y = end->get_yPos();
-        end_y = start->get_yPos();
+	//cout << "Passed" << endl;
+    int start_y = col;
+    int end_y = kingcol;
+	//cout << "xpos " << start_y << " " << end_y << endl;
+    if(start_y > end_y){
+        start_y = kingcol;
+        end_y = col;
     }
-    if(start->get_xPos() != end->get_xPos()){
-        clear = false;
+    if(row != kingrow){
+        return false;
     }
     else {
         for(int i = start_y+1; i < end_y; i++){
-            if(x[start->get_xPos()][i] != NULL){
+            if(y[row][i] != ' '){
                 clear = false;
             }
         }
@@ -294,30 +315,29 @@ bool vertical(Piece* start, Piece* end){
     
 }
 
-bool diagonal(Piece* start, Piece* end){
+bool diagonal(int row, int col, int kingrow, int kingcol){
     bool clear = true;
     int x_d = 1;
     int y_d = 1;
-    if(start->get_xPos()-end->get_xPos() < 0){
+    if(row - kingrow < 0){
         x_d = -1;
     }
-    if(start->get_yPos()-end->get_yPos() < 0){
+    if(col - kingcol < 0){
         y_d = -1;
     }
-    if(abs(start->get_xPos()-end->get_xPos()) != abs(start->get_yPos()-end->get_yPos())){
-        clear = false;
-    }
-    else{
-        for(int i = 1; i < start->get_xPos()-end->get_xPos(); i ++){
-            if(x[start->get_xPos()+(i*x_d)][start->get_yPos()+(i*y_d)] != NULL){
-                clear = false;
+    if((col - kingcol) == 0 || abs(row - kingrow)/abs(col - kingcol) != 1){
+        return false;
+    }else{
+        for(int i = 1; i < abs(row - kingrow); i++){
+            if(y[kingrow+(i*x_d)][kingcol+(i*y_d)] != ' '){
+                return false;
             }
         }
     }
     return clear;
 }
 
-bool kingcheck(){
+bool kingcheck(int player){
     bool check = false;
 	//White's turn and black's king
     char king = 'k';
@@ -328,7 +348,7 @@ bool kingcheck(){
     char pawn = 'P';
     
 	//Change if black's turn, king is white's
-    if (turn % 2 == 1){
+    if (player % 2 == 1){
         king = 'K';
         rook = 'r';
         knight = 'n';
@@ -337,92 +357,81 @@ bool kingcheck(){
         pawn = 'p';
     }
 
-
-    char a[8][8];
-    int kingrow = 0;
-    int kingcol = 0;
-    for (int j = 0; j < 8; j ++){
-        for (int k = 0; k < 8; k ++){
-            if(x[j][k] != NULL){
-                a[j][k] = x[j][k]->get_piece();
-                if(a[j][k] == king){
-                    kingrow = j;
-                    kingcol = k;
-                }
-            }else{
-				a[j][k] = ' ';
-			}
-        }
-    }
+	//Locates all the pieces on artifical board
+	int kingrow, kingcol;
+	findking(player+1, kingrow, kingcol);
     
 	cout << "King is at " << kingrow << " " << kingcol << endl;
 	
     // rook
     for (int row = 0; row < 8; row ++){
         for (int col = 0; col < 8; col ++){
-            if (a[row][col] == rook){
-                if (horizontal(x[row][col], x[kingrow][kingcol]) || vertical(x[row][col], x[kingrow][kingcol])){
-                    check = true;
+            if (y[row][col] == rook){
+				//cout << "is jason a bonobo" << endl;
+				//cout << row << " " << col << endl<< endl;
+                if (horizontal(row, col, kingrow, kingcol) || vertical(row, col, kingrow, kingcol)){
+					//cout << "jason is not a bonobo";
+                    return true;
                 }
             }
         }
     }
     
     // knight
-    if (kingrow < 7 && kingcol < 7){
-        if (a[kingrow+1][kingcol+2] == knight){
-            check = true;
+    if (kingrow < 7 && kingcol < 6){
+        if (y[kingrow+1][kingcol+2] == knight){
+            return true;
         }
     }
 
-    if (kingrow < 7 && kingcol >0){
-        if (a[kingrow+1][kingcol-1] == knight){
-            check = true;
+    if (kingrow < 7 && kingcol > 1){
+        if (y[kingrow+1][kingcol-2] == knight){
+            return true;
         }
     }
     
     if (kingrow > 0 && kingcol < 6){
-        if (a[kingrow-1][kingcol+2] == knight){
-            check = true;
+        if (y[kingrow-1][kingcol+2] == knight){
+            return true;
         }
     }
     
     if (kingrow > 0 && kingcol > 1) {
-        if (a[kingrow-1][kingcol-2] == knight){
-            check = true;
+        if (y[kingrow-1][kingcol-2] == knight){
+            return true;
         }
     }
     
     if (kingrow < 6 && kingcol < 7){
-        if (a[kingrow+2][kingcol+1] == knight){
-            check = true;
+        if (y[kingrow+2][kingcol+1] == knight){
+            return true;
         }
     }
 
     if (kingrow < 6 && kingcol > 0){
-        if (a[kingrow+2][kingcol-1] == knight){
-            check = true;
+        if (y[kingrow+2][kingcol-1] == knight){
+            return true;
         }
     }
 
     if (kingrow > 1 && kingcol <7){
-        if (a[kingrow-2][kingcol+1] == knight){
-            check = true;
+        if (y[kingrow-2][kingcol+1] == knight){
+            return true;
         }
     }
 
     if (kingrow > 1 && kingcol > 0){
-        if (a[kingrow-2][kingcol-1] == knight){
-            check = true;
+        if (y[kingrow-2][kingcol-1] == knight){
+            return true;
         }
     }
 
     // bishop
     for (int row = 0; row < 8; row ++){
         for (int col = 0; col < 8; col ++){
-            if (a[row][col] == bishop){
-                if (diagonal(x[row][col], x[kingrow][kingcol])){
-                    check = true;
+            if (y[row][col] == bishop){
+                if (diagonal(row, col, kingrow, kingcol)){
+                    return true;
                 }
             }
         }
@@ -431,9 +440,9 @@ bool kingcheck(){
     // pawn
     for (int row = 0; row < 8; row ++){
         for (int col = 0; col < 8; col ++){
-            if (a[row][col] == pawn && abs(row-kingrow) == 1){
-                if (diagonal(x[row][col], x[kingrow][kingcol])){
-                    check = true;
+            if (y[row][col] == pawn && abs(row-kingrow) == 1){
+                if (diagonal(row, col, kingrow, kingcol)){
+                    return true;
                 }
             }
         }
@@ -442,15 +451,35 @@ bool kingcheck(){
     // queen
     for (int row = 0; row < 8; row ++){
         for (int col = 0; col < 8; col ++){
-            if (a[row][col] == queen){
-                if (diagonal(x[row][col], x[kingrow][kingcol]) || horizontal(x[row][col], x[kingrow][kingcol]) || vertical(x[row][col], x[kingrow][kingcol])){
-                    check = true;
+            if (y[row][col] == queen){
+                if (diagonal(row, col, kingrow, kingcol) || horizontal(row, col, kingrow, kingcol) || vertical(row, col, kingrow, kingcol)){
+                    return true;
                 }
             }
         }
     }
     
     return check;
+}
+
+void findking(int player, int& row, int& col)
+{
+	char king = 'K';
+	if(player % 2 == 1)
+	{
+		king = 'k';
+	}
+	//cout << "bye";
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(y[i][j] != ' ' && y[i][j] == king){
+				//cout << "hi";
+				row = i;
+				col = j;
+				return;
+			}
+		}
+	}
 }
 
 int main(){
