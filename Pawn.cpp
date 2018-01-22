@@ -38,7 +38,12 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 	}
 	if(yPos == yTar)
 	{
+		cout<< "goh here" << endl;
 		if(board[xTar][yTar] != NULL)
+		{
+			return false;
+		}
+		if(xTar != xPos + one && xTar != xPos + two)
 		{
 			return false;
 		}
