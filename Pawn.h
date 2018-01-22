@@ -11,7 +11,7 @@ class Pawn : public Piece
 	
 	//void move(int xTar, int yTar);
 	
-	virtual bool checkValid(int xTar, int yTar, Piece* board[8][8]);
+	//virtual bool checkValid(int xTar, int yTar, Piece* board[8][8]);
 	
 	private:
 		int xPos;

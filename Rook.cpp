@@ -5,7 +5,6 @@ using namespace std;
 
 Rook::Rook(int x, int y, char p):Piece(x,y,p)
 {
-	//moved = False;
 }
 /**
 void Rook::move(int xTar, int yTar)
@@ -17,7 +16,7 @@ void Rook::move(int xTar, int yTar)
 	xPos = xTar;
 	yPos = yTar;
 }
-*/
+
 
 bool Rook::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
@@ -77,4 +76,4 @@ bool Rook::checkValid(int xTar, int yTar, Piece* board[8][8])
 	xPos = xTar;
 	yPos = yTar;
 	return true;
-}
+}*/

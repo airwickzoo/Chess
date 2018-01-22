@@ -42,10 +42,16 @@ void Piece::set_moved()
 	moved = true;
 }
 
+bool Piece::get_moved()
+{
+	return moved;
+}
+
 void Piece::move(int xTar, int yTar)
 {
-	this->xPos = xTar;
-	this->yPos = yTar;
+	cout << "bononononono";
+	xPos = xTar;
+	yPos = yTar;
 }
 
 bool Piece::checkValid(int xTar, int yTar, Piece* board[8][8])

@@ -9,6 +9,7 @@ King::King(int x, int y, char p):Piece(x,y,p)
 	//yPos = y;
 	//piece = p;
 }
+/*
 bool King::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
 	if(abs(xTar-xPos) == 1 && abs(yTar-yPos) == 0){
@@ -20,8 +21,8 @@ bool King::checkValid(int xTar, int yTar, Piece* board[8][8])
 	}else{
 		return false;
 	}
-	
+
 	xPos = xTar;
 	yPos = yTar;
 	return true;
-}
+}*/

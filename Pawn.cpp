@@ -1,5 +1,6 @@
 #include "Pawn.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ Pawn::Pawn(int x, int y, char p):Piece(x,y,p)
 	yPos = y;
 	piece = p;
 }
-/**
+/*
 void Pawn::move(int xTar, int yTar)
 {
 	while(!checkValid(xTar, yTar))
@@ -19,7 +20,7 @@ void Pawn::move(int xTar, int yTar)
 	xPos = xTar;
 	yPos = yTar;
 }
-*/
+
 bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
 
@@ -32,7 +33,7 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 		one = -1;
 	}
 	
-	if(xTar - xPos > 2 || xPos - xTar > 2)
+	if(abs(xTar - xPos) > 2)
 	{
 		return false;
 	}
@@ -41,14 +42,17 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 		cout<< "goh here" << endl;
 		if(board[xTar][yTar] != NULL)
 		{
+			cout << "god damn" << endl;
 			return false;
 		}
 		if(xTar != xPos + one && xTar != xPos + two)
 		{
+			cout << "god shit" << endl;
 			return false;
 		}
 		if(xTar == xPos + two && moved)
 		{
+			cout << xPos << " " << yPos << endl;
 			return false;
 		}
 	}
@@ -58,7 +62,7 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 		{
 			return false;
 		}
-		if(!board[xTar][yTar])
+		if(board[xTar][yTar] == NULL)
 		{
 			return false;
 		}
@@ -71,4 +75,4 @@ bool Pawn::checkValid(int xTar, int yTar, Piece* board[8][8])
 	xPos = xTar;
 	yPos = yTar;
 	return true;
-}
+}*/

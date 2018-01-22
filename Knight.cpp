@@ -9,7 +9,7 @@ Knight::Knight(int x, int y, char p):Piece(x,y,p)
 	yPos = y;
 	piece = p;
 }
-
+/*
 bool Knight::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
 	if(abs(xPos-xTar) == 2 && abs(yPos-yTar) == 1)
@@ -28,4 +28,4 @@ bool Knight::checkValid(int xTar, int yTar, Piece* board[8][8])
 	xPos = xTar;
 	yPos = yTar;
 	return true;
-}
+}*/

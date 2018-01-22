@@ -8,19 +8,8 @@ Bishop::Bishop(int x, int y, char p):Piece(x,y,p)
 	xPos = x;
 	yPos = y;
 	piece = p;
-	//moved = False;
 }
-/**
-void Bishop::move(int xTar, int yTar)
-{
-	while(!checkValid(xTar, yTar))
-	{
-		//get x and y
-	}
-	xPos = xTar;
-	yPos = yTar;
-}
-*/
+/*
 bool Bishop::checkValid(int xTar, int yTar, Piece* board[8][8])
 {
 	if(xTar-xPos == 0 || yTar-yPos == 0)
@@ -77,5 +66,7 @@ bool Bishop::checkValid(int xTar, int yTar, Piece* board[8][8])
 	{
 		return false;
 	}
+	xPos = xTar;
+	yPos = yTar;
 	return true;
-}
+}*/

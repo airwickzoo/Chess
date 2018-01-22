@@ -18,6 +18,8 @@ public:
 	void set_xPos(int xTar);
 	
 	void set_yPos(int yTar);
+	
+	bool get_moved();
 
 	void move(int xTar, int yTar);
 
