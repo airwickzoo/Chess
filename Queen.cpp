@@ -1,5 +1,4 @@
 #include "Queen.h"
-#include <iostream>
 
 using namespace std;
 

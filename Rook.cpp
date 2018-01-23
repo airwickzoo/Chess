@@ -1,5 +1,4 @@
 #include "Rook.h"
-#include <iostream>
 
 using namespace std;
 

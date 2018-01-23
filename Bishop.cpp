@@ -1,5 +1,4 @@
 #include "Bishop.h"
-#include <iostream>
 
 using namespace std;
 

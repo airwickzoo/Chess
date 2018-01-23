@@ -1,5 +1,4 @@
 #include "King.h"
-#include <cmath>
 
 using namespace std;
 
