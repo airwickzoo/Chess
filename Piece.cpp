@@ -1,9 +1,8 @@
 #include "Piece.h"
-#include <cctype>
-#include <iostream>
 
 using namespace std;
 
+//Constructor
 Piece::Piece(int x, int y, char p)
 {
 	xPos = x;
@@ -12,29 +11,9 @@ Piece::Piece(int x, int y, char p)
 	moved = false;
 }
 
-int Piece::get_xPos()
-{
-	return xPos;
-}
-
-int Piece::get_yPos()
-{
-	return yPos;
-}
-
 char Piece::get_piece()
 {
 	return piece;
-}
-
-void Piece::set_xPos(int xTar)
-{
-	xPos = xTar;
-}
-
-void Piece::set_yPos(int yTar)
-{
-	yPos = yTar;
 }
 
 void Piece::set_moved()
@@ -46,16 +25,3 @@ bool Piece::get_moved()
 {
 	return moved;
 }
-
-void Piece::move(int xTar, int yTar)
-{
-	cout << "bononononono";
-	xPos = xTar;
-	yPos = yTar;
-}
-
-bool Piece::checkValid(int xTar, int yTar, Piece* board[8][8])
-{
-	return true;
-}
-
